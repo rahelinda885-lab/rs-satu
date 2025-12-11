@@ -86,9 +86,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white max-w-6xl mx-auto shadow-2xl overflow-hidden">
+    // Use h-[100dvh] for mobile browsers to avoid address bar cutting off content
+    <div className="flex flex-col h-[100dvh] bg-white max-w-6xl mx-auto shadow-2xl overflow-hidden font-sans">
       {/* Header */}
-      <header className="bg-slate-900 text-white p-4 flex items-center justify-between z-20 shadow-md">
+      <header className="bg-slate-900 text-white p-4 flex items-center justify-between z-20 shadow-md flex-shrink-0">
         <div className="flex items-center gap-2">
           <div className="bg-blue-500 p-2 rounded-lg">
             <Bot className="w-6 h-6 text-white" />
@@ -100,34 +101,34 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
+      <main className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         {/* Visualization Panel */}
-        <div className="w-full md:w-1/3 bg-slate-50 border-r border-slate-200 p-4 flex flex-col justify-center">
-          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2 text-center">System Architecture Status</h2>
+        <div className="w-full md:w-1/3 bg-slate-50 border-r border-slate-200 p-4 flex flex-col justify-center flex-shrink-0 min-h-[300px] md:min-h-0">
+          <h2 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2 text-center">System Architecture Status</h2>
           <AgentVisualizer activeAgent={activeAgent} />
-          <div className="mt-4 text-xs text-slate-400 text-center px-4">
+          <div className="mt-4 text-[10px] md:text-xs text-slate-400 text-center px-4">
             Requests are analyzed by the Coordinator and dispatched to specialized agents using Gemini Function Calling.
           </div>
         </div>
 
         {/* Chat Interface */}
-        <div className="w-full md:w-2/3 flex flex-col bg-white relative">
+        <div className="w-full md:w-2/3 flex flex-col bg-white relative h-full overflow-hidden">
           
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide">
+          <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide pb-20">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
               >
-                <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${
+                <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex-shrink-0 flex items-center justify-center ${
                   msg.role === 'user' ? 'bg-blue-100' : 'bg-slate-100'
                 }`}>
-                  {msg.role === 'user' ? <User className="w-6 h-6 text-blue-600" /> : <Bot className="w-6 h-6 text-slate-600" />}
+                  {msg.role === 'user' ? <User className="w-5 h-5 md:w-6 md:h-6 text-blue-600" /> : <Bot className="w-5 h-5 md:w-6 md:h-6 text-slate-600" />}
                 </div>
                 
-                <div className={`flex flex-col max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                  <div className={`px-5 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                <div className={`flex flex-col max-w-[85%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                  <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
                     msg.role === 'user' 
                       ? 'bg-blue-600 text-white rounded-tr-none' 
                       : 'bg-slate-100 text-slate-800 rounded-tl-none border border-slate-200'
@@ -135,7 +136,8 @@ const App: React.FC = () => {
                     {msg.content}
                   </div>
                   {msg.agent && msg.role === 'model' && (
-                    <span className="text-[10px] text-slate-400 mt-1 ml-2 font-mono">
+                    <span className="text-[10px] text-slate-400 mt-1 ml-2 font-mono flex items-center gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
                       Processed by: {msg.agent}
                     </span>
                   )}
@@ -158,15 +160,15 @@ const App: React.FC = () => {
           </div>
 
           {/* Input Area */}
-          <div className="p-4 border-t border-slate-100 bg-white z-10">
+          <div className="p-3 md:p-4 border-t border-slate-100 bg-white z-10 w-full">
             <div className="relative flex items-center max-w-4xl mx-auto">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="Type your request (e.g., 'Book an appointment with Dr. Aisyah')..."
-                className="w-full pl-5 pr-14 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm text-sm"
+                placeholder="Type your request (e.g., 'Book an appointment')..."
+                className="w-full pl-4 pr-12 py-3 md:py-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm text-sm"
                 disabled={loading}
               />
               <button
@@ -174,10 +176,10 @@ const App: React.FC = () => {
                 disabled={loading || !input.trim()}
                 className="absolute right-2 p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-600 transition-colors"
               >
-                <Send className="w-5 h-5" />
+                <Send className="w-4 h-4 md:w-5 md:h-5" />
               </button>
             </div>
-            <div className="text-center mt-2 text-[10px] text-slate-400">
+            <div className="text-center mt-2 text-[10px] text-slate-400 hidden md:block">
               Powered by Gemini 2.5 Flash • MedCore Hospital System
             </div>
           </div>
