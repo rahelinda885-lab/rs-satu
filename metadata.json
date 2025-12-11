@@ -1,0 +1,5 @@
+{
+  "name": "MedCore AI Coordinator",
+  "description": "A multi-agent hospital system coordinator powered by Gemini 2.5 Flash. Integrates patient management, scheduling, medical records, and billing.",
+  "requestFramePermissions": []
+}
